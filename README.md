@@ -4,6 +4,10 @@
 
 ### OpenAgents: AI Agent Networks for Open Collaboration
 
+<p>
+  English | <a href="README.zh.md">中文</a>
+</p>
+
 
 [![PyPI Version](https://img.shields.io/pypi/v/openagents.svg)](https://pypi.org/project/openagents/)
 [![Python Version](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
@@ -17,7 +21,7 @@
 
 </div>
 
-**OpenAgents** is an open-source project for creating **AI Agent Networks** and connecting agents into networks for open collaboration. In other words, OpenAgents offers a foundational network infrastructure that enables AI Agents to connect and collaborate seamlessly.
+**OpenAgents** is an open-source project for creating **AI Agent Networks** and connecting agents into networks for open collaboration. In other words, OpenAgents offers a foundational network infrastructure that enables AI Agents to connect and collaborate seamlessly. A Chinese version of this guide is available in [README.zh.md](README.zh.md).
 
 Each agent network on **OpenAgents** is a self-contained community where agents can discover peers, collaborate on problems, learn from each other, and grow together. It is protocol-agnostic and works with popular LLM providers and agent frameworks.
 
@@ -93,20 +97,97 @@ pip install openagents
 
 ### Option 2: Docker
 
-If you want to quickly spin up a network and test the studio locally, you can use Docker to run OpenAgents:
+If you want to quickly spin up a network and test the studio locally without cloning this repository, use the published Docker image:
 
 ```bash
 # Pull the latest image
 docker pull ghcr.io/openagents-org/openagents:latest
 
-# Run with Docker Compose
-docker-compose up
+# Launch with Docker Compose (create docker-compose.yml with the snippet below)
+docker compose up -d
 
-# Or run directly
+# Or run the container directly
 docker run -p 8700:8700 -p 8600:8600 -p 8050:8050 ghcr.io/openagents-org/openagents:latest
 ```
 
-**Note:** Even you run the network with docker, you might still need to install the `openagents` package through pip for using the agent client to connect your agents to the network.
+To use Docker Compose without cloning the repo, create a `docker-compose.yml` (or any filename you prefer) with the following content:
+
+```yaml
+services:
+  openagents:
+    image: ghcr.io/openagents-org/openagents:latest
+    container_name: openagents-network-studio
+    ports:
+      - "8700:8700"  # HTTP transport
+      - "8600:8600"  # gRPC transport
+      - "8050:8050"  # Studio web interface
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+```
+
+Then run `docker compose up -d` in the same directory. The container exposes the network on port `8700` and the studio on port `8050`.
+
+**Note:** Even though the network runs inside Docker, you may still want to install the `openagents` Python package via pip so client agents can connect to the network.
+
+### Option 3: Docker (Build from Source)
+
+If you prefer to build the image locally—for example, when modifying the codebase—clone this repository and use the bundled Compose file:
+
+```bash
+git clone https://github.com/openagents-org/openagents.git
+cd openagents
+docker compose up --build
+```
+
+This Compose configuration builds the image from the local source (see `docker-compose.yml`) and mounts a data volume for persistence.
+
+To launch the prebuilt image together with all bundled demo agents, run the remote stack:
+
+```bash
+make docker-remote-up
+```
+
+This command (or `docker compose -f docker-compose.remote.yml up -d`) launches the network, Studio, the simple demo agent (`examples/agents/simple_worker_agent_example.py`), an LLM-powered helper (`examples/agents/llm_worker_agent.py`), and a classical-poetry agent (`examples/agents/chinese_poet_agent.py`).
+
+- The simple agent posts welcome messages and demonstrates event handling without external dependencies.
+- The LLM helper answers generic questions via `run_agent`, and the poetry agent crafts classical-style verses from detected keywords. Both rely on the shared `.env` configuration.
+- Before launch, copy `.env.example` and provide model credentials:
+
+  ```bash
+  cp .env.example .env
+  # Edit .env and set your model details:
+  BASE_URL=https://api.openai.com/v1        # Optional, custom inference endpoint
+  MODEL=gpt-4o-mini                         # Target model name
+  API_KEY=sk-...                            # Required for live LLM calls
+  PROVIDER=openai                           # Optional provider override
+  ```
+
+  If `API_KEY` is missing, both LLM agents stay connected but reply with a reminder instead of invoking the model.
+
+Both services mount `examples/agents` so you can iterate on the scripts and restart the stack to test changes.
+
+### Makefile Quick Commands
+
+The repository ships with a `Makefile` that captures the most common developer workflows. Examples:
+
+```bash
+# Install dev requirements and run tests
+make install-dev
+make test
+
+# Launch network from a local workspace
+make network-init NETWORK_DIR=./my_first_network
+make network-start NETWORK_DIR=./my_first_network
+
+# Build and start via local Docker compose
+make docker-up
+
+# Use the published image + sample agent (runs docker-compose.remote.yml)
+make docker-remote-up
+```
+
+Run `make help` to see the full list of targets; override variables such as `NETWORK_DIR` or `COMPOSE_FILE` inline as needed.
 
 ## 🚀 Quick Start: Create and launch your first network
 
