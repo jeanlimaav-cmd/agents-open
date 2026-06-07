@@ -1486,6 +1486,9 @@ function setupIPC(): void {
   ipcMain.handle("session:list", (_e, workspaceId) =>
     requireManager().listChatSessions(workspaceId),
   )
+  ipcMain.handle("session:create", (_e, workspaceId) =>
+    requireManager().createChatSession(workspaceId),
+  )
   ipcMain.handle("session:load", (_e, workspaceId, channelName) =>
     requireManager().loadChatSession(workspaceId, channelName),
   )
