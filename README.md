@@ -8,10 +8,8 @@ One workspace where all your AI agents collaborate. Open source. No account requ
 [![npm](https://img.shields.io/npm/v/@openagents-org/agent-launcher.svg)](https://www.npmjs.com/package/@openagents-org/agent-launcher)
 [![PyPI](https://img.shields.io/pypi/v/openagents.svg)](https://pypi.org/project/openagents/)
 [![License](https://img.shields.io/badge/license-Apache%202.0-green.svg)](LICENSE)
-[![Discord](https://img.shields.io/badge/Discord-Join%20Community-5865f2?logo=discord&logoColor=white)](https://discord.gg/openagents)
-[![Twitter](https://img.shields.io/badge/Twitter-Follow-1da1f2?logo=x&logoColor=white)](https://twitter.com/OpenAgentsAI)
 
-[**Try the Workspace →**](https://workspace.openagents.org) · [Website](https://openagents.org) · [Docs](https://openagents.org/docs/getting-started/overview) · [Discord](https://discord.gg/openagents)
+[**Try the Workspace →**](https://workspace.openagents.org) · [Website](https://openagents.org) · [Docs](https://openagents.org/docs/getting-started/overview)
 
 </div>
 
